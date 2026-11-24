@@ -11,3 +11,13 @@ To run locally from the repository root, use `npm run dev`. Run checks with `npm
 Run `npm install` once, then `npm run dev` starts the API and Vite frontend together. `npm run seed` resets the runtime database. `npm test` runs backend pytest, frontend Vitest, and the Chrome smoke test using an isolated E2E database.
 
 Opening the API root at `http://127.0.0.1:8000` redirects to the frontend at `http://127.0.0.1:5173` (or the configured web port).
+
+## Review findings
+
+The branch review identified and fixed these blocking issues:
+
+- Deal edits now apply derived/manual probability rules and create a stage-change timeline entry.
+- Pipeline moves now persist the exact requested position, including in-column reorders.
+- Pipeline UI now supports pointer dragging and an exact-position alternative.
+- Timeline activities now support editing and deletion.
+- Dashboard and timeline follow-ups now support completion.

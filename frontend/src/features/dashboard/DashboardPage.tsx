@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Activity, Deal, getDashboard, getDeals, getPipeline, PipelineColumn, Stage, TimelineItem } from "../../api/client";
+import { Activity, Deal, getDashboard, getDeals, getPipeline, PipelineColumn, Stage, TimelineItem, updateActivity } from "../../api/client";
 import { compactCurrency, currency, formatDate, wonRevenueByMonth } from "../shared/format";
 import { ErrorPanel } from "../shared/RecordPages";
 
@@ -123,14 +123,23 @@ function isStageChange(activity: Activity | TimelineItem): activity is Extract<T
 }
 
 function Followup({ activity }: { activity: Activity }) {
+  const client = useQueryClient();
+  const complete = useMutation({
+    mutationFn: () => updateActivity(activity.id, {
+      type: activity.type, description: activity.description, happened_at: activity.happened_at,
+      follow_up_date: activity.follow_up_date, done: true,
+      contact_id: activity.contact_ids[0] ?? null, deal_id: activity.deal_ids[0] ?? null,
+    }),
+    onSuccess: () => client.invalidateQueries(),
+  });
   const href = activity.deal_ids[0] ? `/deals/${activity.deal_ids[0]}` : activity.contact_ids[0] ? `/contacts/${activity.contact_ids[0]}` : "/";
   const today = localDate(new Date());
   const overdue = activity.follow_up_date && activity.follow_up_date < today;
   const dueLabel = overdue ? `Overdue · ${formatDate(activity.follow_up_date)}` : activity.follow_up_date === today ? `Today · ${formatDate(activity.follow_up_date)}` : formatDate(activity.follow_up_date);
-  return <Link className="task-row" to={href}>
-    <span className="task-check" aria-hidden="true" />
-    <span><span className="task-description">{activity.description}</span><small className={overdue ? "overdue" : ""}>{dueLabel}</small></span>
-  </Link>;
+  return <div className="task-row">
+    <button className="task-check" type="button" aria-label={`Mark ${activity.description} done`} disabled={complete.isPending} onClick={() => complete.mutate()} />
+    <Link to={href}><span className="task-description">{activity.description}</span><small className={overdue ? "overdue" : ""}>{dueLabel}</small></Link>
+  </div>;
 }
 
 function DashboardPipeline({ columns, openValue, expectedRevenue }: { columns: PipelineColumn[]; openValue: number; expectedRevenue: number }) {

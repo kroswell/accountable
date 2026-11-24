@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Activity, Contact, Deal, getContacts, getDeals, getOrganizations, getRecord, Organization,
-  saveRecord, deleteRecord, createActivity, TimelineItem, Stage, ContactStatus,
+  saveRecord, deleteRecord, createActivity, updateActivity, deleteActivity, TimelineItem, Stage, ContactStatus,
 } from "../../api/client";
 import { formatDate, currency, STAGES } from "./format";
 
@@ -177,30 +177,52 @@ export function RecordDetailPage({ kind }: { kind: Kind }) {
   </main>;
 }
 
-export function ActivityForm({ contactId, dealId }: { contactId?: string; dealId?: string }) {
+export function ActivityForm({ contactId, dealId, initial, onDone }: { contactId?: string; dealId?: string; initial?: Activity; onDone?: () => void }) {
   const client = useQueryClient();
-  const [type, setType] = useState("Note");
-  const [description, setDescription] = useState("");
-  const [happenedAt, setHappenedAt] = useState(() => new Date().toISOString().slice(0, 16));
-  const [followUpDate, setFollowUpDate] = useState("");
+  const [type, setType] = useState(initial?.type ?? "Note");
+  const [description, setDescription] = useState(initial?.description ?? "");
+  const [happenedAt, setHappenedAt] = useState(() => initial ? new Date(initial.happened_at).toISOString().slice(0, 16) : new Date().toISOString().slice(0, 16));
+  const [followUpDate, setFollowUpDate] = useState(initial?.follow_up_date ?? "");
+  const [done, setDone] = useState(initial?.done ?? false);
   const save = useMutation({
-    mutationFn: () => createActivity({ type, description, happened_at: new Date(happenedAt).toISOString(), follow_up_date: followUpDate || null, done: false, contact_id: contactId ?? null, deal_id: dealId ?? null }),
-    onSuccess: () => { setDescription(""); setFollowUpDate(""); client.invalidateQueries(); },
+    mutationFn: () => {
+      const payload = {
+        type, description, happened_at: new Date(happenedAt).toISOString(),
+        follow_up_date: followUpDate || null, done,
+        contact_id: contactId ?? initial?.contact_ids[0] ?? null,
+        deal_id: dealId ?? initial?.deal_ids[0] ?? null,
+      };
+      return initial ? updateActivity(initial.id, payload) : createActivity(payload);
+    },
+    onSuccess: () => { setDescription(""); setFollowUpDate(""); client.invalidateQueries(); onDone?.(); },
   });
   return <form className="panel activity-form" onSubmit={(event) => { event.preventDefault(); save.mutate(); }}>
-    <h2>Log an activity</h2>
-    <label className="form-field">Type<select value={type} onChange={(event) => setType(event.target.value)}>{["Note", "Call", "Email"].map((item) => <option key={item}>{item}</option>)}</select></label>
+    <h2>{initial ? "Edit activity" : "Log an activity"}</h2>
+    <label className="form-field">Type<select value={type} onChange={(event) => setType(event.target.value as "Note" | "Call" | "Email")}>{["Note", "Call", "Email"].map((item) => <option key={item}>{item}</option>)}</select></label>
     <label className="form-field">Description<textarea required rows={3} value={description} onChange={(event) => setDescription(event.target.value)} /></label>
     <label className="form-field">When<input required type="datetime-local" value={happenedAt} onChange={(event) => setHappenedAt(event.target.value)} /></label>
     <label className="form-field">Follow-up date<input type="date" value={followUpDate} onChange={(event) => setFollowUpDate(event.target.value)} /></label>
+    {initial && <label className="form-field"><span>Completed<input type="checkbox" checked={done} onChange={(event) => setDone(event.target.checked)} /></span></label>}
     {save.isError && <p className="error-text">{(save.error as Error).message}</p>}
-    <button className="primary-button" disabled={save.isPending}>{save.isPending ? "Saving…" : "Save activity"}</button>
+    <button className="primary-button" disabled={save.isPending}>{save.isPending ? "Saving…" : initial ? "Save changes" : "Save activity"}</button>
   </form>;
 }
 
 export function Timeline({ items }: { items: TimelineItem[] }) {
+  const client = useQueryClient();
+  const [editing, setEditing] = useState<Activity | null>(null);
+  const remove = useMutation({
+    mutationFn: (id: string) => deleteActivity(id),
+    onSuccess: () => client.invalidateQueries(),
+  });
   if (!items.length) return <p className="muted">No activity yet. Log a note, call or email to start the timeline.</p>;
-  return <ol className="timeline">{items.map((item) => {
+  return <>
+  {editing && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setEditing(null); }}>
+    <div className="record-modal" role="dialog" aria-modal="true" aria-labelledby="edit-activity-title">
+      <ActivityForm initial={editing} onDone={() => setEditing(null)} />
+    </div>
+  </div>}
+  <ol className="timeline">{items.map((item) => {
     const stageChange = "kind" in item && item.kind === "stage_change";
     const title = stageChange
       ? `Moved from ${item.from_stage} to ${item.to_stage}`
@@ -209,9 +231,14 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
     <span className={`timeline-dot ${"kind" in item && item.kind === "stage_change" ? "dot-stage" : ""}`} />
     <div><p className="timeline-title">{title}</p>
       <p className="muted">{new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(item.happened_at))}{!("kind" in item) && item.follow_up_date ? ` · Follow-up ${formatDate(item.follow_up_date)}` : ""}</p>
+      {!stageChange && <div className="timeline-actions">
+        <button className="text-button" type="button" onClick={() => setEditing(item as Activity)}>Edit</button>
+        <button className="text-button danger-text" type="button" onClick={() => { if (window.confirm("Delete this activity?")) remove.mutate(item.id); }}>Delete</button>
+      </div>}
     </div>
   </li>;
   })}</ol>;
+  </>;
 }
 
 export function ErrorPanel({ error }: { error: unknown }) {

@@ -198,7 +198,16 @@ def router_for(engine: Engine) -> APIRouter:
             old = connection.execute(select(deals).where(deals.c.id == record_id)).mappings().first()
             if not old: raise HTTPException(404, "Deal not found")
             values = payload.model_dump(exclude={"probability"}); values["value_usd"] = Decimal(str(payload.value_usd)); values["updated_at"] = clock.now()
-            if payload.probability is not None: values.update(probability=payload.probability, probability_source="manual")
+            stage_changed = old["stage"] != payload.stage
+            if payload.probability is not None:
+                values.update(probability=payload.probability, probability_source="manual")
+            elif stage_changed and old["probability_source"] == "derived":
+                values.update(probability=STAGE_PROBABILITIES[payload.stage], probability_source="derived")
+            if stage_changed:
+                connection.execute(stage_changes.insert().values(
+                    id=_id("stage-change"), deal_id=record_id, from_stage=old["stage"],
+                    to_stage=payload.stage, happened_at=clock.now(),
+                ))
             connection.execute(update(deals).where(deals.c.id == record_id).values(**values))
             return deal_payload(connection, connection.execute(select(deals).where(deals.c.id == record_id)).mappings().one())
 
@@ -270,13 +279,37 @@ def router_for(engine: Engine) -> APIRouter:
         with engine.begin() as connection:
             old = connection.execute(select(deals).where(deals.c.id == record_id)).mappings().first()
             if not old: raise HTTPException(404, "Deal not found")
-            target_count = connection.scalar(select(func.count()).select_from(deals).where(deals.c.stage == payload.stage, deals.c.id != record_id))
-            position = min(payload.position, target_count)
-            connection.execute(update(deals).where(deals.c.id == record_id).values(stage=payload.stage, position=position, probability=(old["probability"] if old["probability_source"] == "manual" else STAGE_PROBABILITIES[payload.stage]), updated_at=clock.now()))
+            source_ids = list(connection.scalars(
+                select(deals.c.id).where(deals.c.stage == old["stage"], deals.c.id != record_id)
+                .order_by(deals.c.position, deals.c.name)
+            ))
+            if old["stage"] == payload.stage:
+                target_ids = [*source_ids]
+                insert_at = min(payload.position, len(target_ids))
+            else:
+                source_ids = [*source_ids]
+                target_ids = list(connection.scalars(
+                    select(deals.c.id).where(deals.c.stage == payload.stage)
+                    .order_by(deals.c.position, deals.c.name)
+                ))
+                insert_at = min(payload.position, len(target_ids))
+            target_ids.insert(insert_at, record_id)
+
+            probability_source = old["probability_source"]
+            probability = old["probability"]
+            if old["stage"] != payload.stage and probability_source == "derived":
+                probability = STAGE_PROBABILITIES[payload.stage]
+
+            connection.execute(update(deals).where(deals.c.id == record_id).values(
+                stage=payload.stage, position=insert_at, probability=probability,
+                updated_at=clock.now(),
+            ))
             if old["stage"] != payload.stage:
                 connection.execute(stage_changes.insert().values(id=_id("stage-change"), deal_id=record_id, from_stage=old["stage"], to_stage=payload.stage, happened_at=clock.now()))
-            for stage in {old["stage"], payload.stage}:
-                for index, deal_id in enumerate(connection.scalars(select(deals.c.id).where(deals.c.stage == stage).order_by(deals.c.position, deals.c.name))):
+            for index, deal_id in enumerate(target_ids):
+                connection.execute(update(deals).where(deals.c.id == deal_id).values(position=index))
+            if old["stage"] != payload.stage:
+                for index, deal_id in enumerate(source_ids):
                     connection.execute(update(deals).where(deals.c.id == deal_id).values(position=index))
             return deal_payload(connection, connection.execute(select(deals).where(deals.c.id == record_id)).mappings().one())
 

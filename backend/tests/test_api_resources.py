@@ -48,6 +48,39 @@ def test_probability_and_stage_move_rules(client):
     assert moved["probability_source"] == "manual"
 
 
+def test_deal_edit_stage_change_updates_derived_probability_and_timeline(client):
+    created = client.post("/api/deals", json={
+        "name": "Editable stage", "organization_id": "org-1", "stage": "New", "value_usd": 1000,
+    }).json()
+    updated = client.put(f"/api/deals/{created['id']}", json={
+        "name": "Editable stage", "organization_id": "org-1", "stage": "Proposal",
+        "value_usd": 1000,
+    })
+    assert updated.status_code == 200
+    assert updated.json()["probability"] == 50
+    assert updated.json()["probability_source"] == "derived"
+    timeline = client.get(f"/api/deals/{created['id']}").json()["timeline"]
+    assert any(item["kind"] == "stage_change" and item["to_stage"] == "Proposal" for item in timeline)
+
+
+def test_pipeline_reorder_persists_exact_slot(client):
+    board = client.get("/api/pipeline").json()
+    source = next(column for column in board["columns"] if column["stage"] == "New")
+    if len(source["cards"]) < 3:
+        for index in range(3 - len(source["cards"])):
+            client.post("/api/deals", json={
+                "name": f"Reorder {index}", "organization_id": "org-1", "stage": "New", "value_usd": 100,
+            })
+    board = client.get("/api/pipeline").json()
+    cards = next(column for column in board["columns"] if column["stage"] == "New")["cards"]
+    deal_id = cards[-1]["id"]
+    moved = client.post(f"/api/deals/{deal_id}/move", json={"stage": "New", "position": 0})
+    assert moved.status_code == 200
+    cards = next(column for column in client.get("/api/pipeline").json()["columns"] if column["stage"] == "New")["cards"]
+    assert cards[0]["id"] == deal_id
+    assert [card["position"] for card in cards] == list(range(len(cards)))
+
+
 def test_activity_requires_link_and_can_link_both(client):
     invalid = client.post("/api/activities", json={
         "type": "Note", "description": "Unlinked", "happened_at": datetime.now().isoformat(),
