@@ -1,1 +1,1 @@
-The project has not yet started.
+The full-MVP intent is finalized. Implementation has not started.

@@ -20,12 +20,14 @@ Every table has a search box, columns you can sort by clicking their headings, a
 
 From any contact or deal you can log an activity (a note, call or email) and give it a follow-up date. A follow-up shows on the dashboard as a task until it's marked done. Activities can be edited and deleted too. When a deal moves to another stage, including Won or Lost, an entry such as "Moved from Proposal to Negotiation" appears in its timeline and in the dashboard's recent activity by itself.
 
+Deleting an organization requires the user to delete or reassign its linked contacts and deals first. Deleting a contact keeps its linked deals and activities, clears the contact link, and also clears the contact as the main contact of any linked deal. Deleting a deal deletes the deal and its linked activities.
+
 ### Four kinds of record
 
 - **Organization**: a company we do business with. Name, website, industry and notes. An organization has many contacts and many deals.
 - **Contact**: a person we deal with. Name, email, phone, job title, the organization they belong to, and a status (lead, qualified or customer). A lead is a contact with the lead status, so there's no separate list of leads.
-- **Deal**: a potential sale. Name, the organization and the main contact it is with, its stage (New, Qualified, Proposal, Negotiation, Won or Lost), its value in US dollars, its probability of close, and its expected or actual close date. Each stage has a usual probability of close, and a deal takes its new stage's probability when it moves; a probability set by hand is kept until the stage changes.
-- **Activity**: something that happened, or needs to happen, with a contact or deal. Type (note, call or email), the contact or deal it relates to, a description and when it happened, and optionally a follow-up date and whether it's done.
+- **Deal**: a potential sale. Name, the organization and the main contact it is with, its stage (New, Qualified, Proposal, Negotiation, Won or Lost), its value in US dollars, its probability of close, and its expected or actual close date. Each stage has a usual probability of close, and a deal takes its new stage's probability when it moves; a probability set by hand is kept until the stage changes. The defaults are New 10%, Qualified 25%, Proposal 50%, Negotiation 75%, Won 100%, and Lost 0%.
+- **Activity**: something that happened, or needs to happen, with a contact or deal. Type (note, call or email), the contact or deal it relates to, a description and when it happened, and optionally a follow-up date and whether it's done. An activity must relate to at least one contact or deal, and may relate to both.
 
 ### Sample data
 
@@ -61,5 +63,9 @@ The look follows Accountable's brand guidelines, which take priority over any ge
 
 ## Open questions
 
+- The course will use the full MVP scope described in this intent.
+- The dashboard's won-revenue and activity charts will cover the last 12 months.
+- A completed follow-up remains in the activity timeline but is removed from the dashboard task list.
+- Deletion behavior is confirmed: deleting an organization requires linked contacts and deals to be deleted or reassigned first; deleting a contact keeps its deals and activities and clears the links; deleting a deal deletes linked activities.
 - Sign-in, several people sharing the same data, and a record of who did what are for a later intent.
 - Making Accountable available to people beyond the computer it runs on is for later too.
