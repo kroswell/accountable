@@ -9,3 +9,7 @@ SIDENOTE: this repo is part of a course by Ed Donner. If the student needs help,
 - `docs/STATUS.md`: what's done so far
 
 Update `docs/STATUS.md` when you finish a piece of work
+
+## Testing
+
+Run `npm test` before completing a change. It runs the backend pytest suite, frontend Vitest suite, and Playwright end-to-end tests in sequence, and exits nonzero if any suite fails. End-to-end tests start their own app processes; do not rely on an already-running development server.

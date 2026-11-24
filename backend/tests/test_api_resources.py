@@ -63,9 +63,14 @@ def test_activity_requires_link_and_can_link_both(client):
 
 
 def test_dashboard_and_pipeline_totals_are_present(client):
+    moved = client.post("/api/deals/deal-1/move", json={"stage": "Qualified", "position": 0})
+    assert moved.status_code == 200
     dashboard = client.get("/api/dashboard")
     pipeline = client.get("/api/pipeline")
     assert dashboard.status_code == 200
     assert dashboard.json()["open_pipeline"] > 0
     assert len(pipeline.json()["columns"]) == 6
     assert pipeline.json()["open_value_usd"] == dashboard.json()["open_pipeline"]
+    recent = dashboard.json()["recent_activity"]
+    assert len(recent) <= 10
+    assert any(item.get("kind") == "stage_change" for item in recent)

@@ -19,12 +19,12 @@ export interface Activity {
   id: string; type: ActivityType; description: string; happened_at: string; follow_up_date: string | null;
   done: boolean; contact_ids: string[]; deal_ids: string[];
 }
-export type TimelineItem = Activity | { id: string; kind: "stage_change"; from_stage: Stage; to_stage: Stage; happened_at: string; deal_id: string };
+export type TimelineItem = Activity | { id: string; kind: "stage_change"; from_stage: Stage; to_stage: Stage; happened_at: string; deal_id: string; deal_name?: string };
 export interface PipelineColumn { stage: Stage; cards: Deal[]; count: number; value_usd: number; expected_revenue: number }
 export interface Pipeline { columns: PipelineColumn[]; open_value_usd: number; open_expected_revenue: number }
 export interface Dashboard {
   open_pipeline: number; open_expected_revenue: number; won_this_month: number; deals_won: number; late_deals: number;
-  pending_follow_ups: Activity[]; recent_activity: Activity[];
+  pending_follow_ups: Activity[]; recent_activity: TimelineItem[];
 }
 
 export async function request<T>(path: string, init?: RequestInit): Promise<T> {

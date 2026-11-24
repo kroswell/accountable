@@ -25,7 +25,9 @@ h2{font-size:18px;margin:0 0 6px}
 .eyebrow{font-size:10px;letter-spacing:1.5px;font-weight:700;color:#158366;margin:0 0 7px}
 .muted{color:#687D84;font-size:13px;margin:0;line-height:1.5}
 .hero-grid{display:grid;grid-template-columns:1.14fr .86fr;gap:14px}
-.hero-panel{min-height:190px;padding:25px 29px;border-radius:18px;background:#073B4C;color:#fff;display:flex;flex-direction:column;justify-content:center}
+.hero-panel{min-height:190px;padding:25px 29px;border-radius:18px;background:#073B4C;color:#fff;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.hero-panel:after{content:"";position:absolute;width:160px;height:160px;border:38px solid #06D6A01f;border-radius:50%;right:-58px;bottom:-82px}
+.hero-panel>*{position:relative;z-index:1}
 .hero-panel span{color:#CDD8DB;font-size:13px}
 .hero-panel strong{display:block;margin:10px 0 6px;font:600 43px "JetBrains Mono",monospace}
 .hero-panel p{color:#DDE7E9;margin:0;font-size:13px}
@@ -33,13 +35,60 @@ h2{font-size:18px;margin:0 0 6px}
 .metric,.panel{padding:19px;border-radius:16px;background:#fff}
 .metric span{display:block;color:#687D84;font-size:12px}
 .metric strong{display:block;margin-top:12px;font:600 22px "JetBrains Mono",monospace}
+.metric small{display:block;margin-top:5px;color:#087F67;font-size:11px}
+.metric-alert small{color:#B82E52}
 .metric-alert strong{color:#C83758}
 .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:15px}
 .funnel-list{display:flex;flex-direction:column;gap:9px;margin-top:22px}
 .funnel-row{min-height:34px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:12px}
 .funnel-row strong{font:600 11px "JetBrains Mono",monospace}
+.funnel-new{background:#DFF7EF}
+.funnel-qualified{background:#FFF2C9}
+.funnel-proposal{background:#FFE2DA}
+.funnel-negotiation{background:#D9EEF5}
+.funnel-won{background:#087F67;color:#fff}
 .chart-panel{min-height:315px}
 .chart-area{height:245px;margin:18px -8px 0}
+.dashboard-title{margin-bottom:18px}
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(250px,.85fr) minmax(250px,.75fr);gap:14px;margin-top:14px;align-items:stretch}
+.dashboard-grid>.panel{min-width:0}
+.revenue-panel,.funnel-panel,.now-panel{min-height:376px}
+.revenue-panel .chart-area{height:260px;margin-top:18px}
+.funnel-panel .funnel-list{margin-top:24px;gap:8px}
+.funnel-panel .funnel-row{height:38px;min-height:38px;min-width:140px;max-width:100%}
+.now-panel{padding:18px}
+.now-activity{margin-top:12px}
+.activity-row{display:grid;grid-template-columns:12px 1fr;gap:8px;padding:9px 0;color:#073B4C}
+.activity-row+.activity-row{border-top:1px solid #EEF2F3}
+.activity-row i{width:8px;height:8px;margin-top:5px;border-radius:50%;background:#118AB2}
+.activity-row i.stage-activity-dot{background:#F78C6B}
+.activity-description{display:block;font-size:12px;line-height:1.35}
+.activity-row small,.task-row small{display:block;margin-top:3px;color:#687D84;font-size:10px}
+.now-followups{margin-top:11px}
+.task-row{display:grid;grid-template-columns:16px 1fr;gap:8px;padding:8px 0;color:#073B4C}
+.task-row+.task-row{border-top:1px solid #EEF2F3}
+.task-check{width:15px;height:15px;margin-top:2px;border:2px solid #AFC0C4;border-radius:4px}
+.task-description{display:block;font-size:12px;line-height:1.35}
+.task-row .overdue{color:#B82E52}
+.dashboard-pipeline{margin-top:28px}
+.pipeline-title{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:12px}
+.pipeline-title h2{font-size:23px;margin-bottom:6px}
+.pipeline-totals{display:flex;gap:22px}
+.pipeline-totals div{display:flex;flex-direction:column;gap:3px}
+.pipeline-totals span{font-size:10px;color:#687D84}
+.pipeline-totals strong{font:600 13px "JetBrains Mono",monospace}
+.dashboard-board{grid-template-columns:repeat(6,minmax(170px,1fr));gap:10px}
+.dashboard-board .pipeline-column{min-height:260px;padding:9px}
+.dashboard-column-head{display:flex;justify-content:space-between;align-items:center;padding:3px 3px 9px;font-size:12px}
+.dashboard-column-head span{font:600 10px "JetBrains Mono",monospace}
+.dashboard-board .deal-card{display:flex;flex-direction:column;gap:4px;padding:10px;margin-bottom:8px}
+.dashboard-deal-name{font-size:11px;line-height:1.3}
+.dashboard-deal-company{color:#687D84;font-size:9px}
+.dashboard-board .late-label{font-size:9px}
+.dashboard-deal-value{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
+.dashboard-deal-value b{font:600 10px "JetBrains Mono",monospace}
+.dashboard-deal-value small{border-radius:10px;background:#EDF4F5;padding:3px 5px;font:600 9px "JetBrains Mono",monospace}
+.dashboard-empty-column{padding:16px 4px;color:#687D84;font-size:10px}
 .section-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .dashboard-lower{display:grid;grid-template-columns:.94fr 1.06fr;gap:14px;margin-top:15px}
 .dashboard-lower>.panel{min-height:280px}

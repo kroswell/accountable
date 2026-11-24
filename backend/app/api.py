@@ -288,7 +288,31 @@ def router_for(engine: Engine) -> APIRouter:
             month_start = clock.today().replace(day=1)
             won = [d for d in all_deals if d["stage"] == "Won" and d["actual_close_date"] and d["actual_close_date"][:7] == month_start.isoformat()[:7]]
             activity_rows = list(connection.execute(select(activities).order_by(activities.c.happened_at.desc()).limit(10)).mappings())
+            recent_activity = [activity_payload(connection, row) for row in activity_rows]
+            stage_rows = connection.execute(
+                select(
+                    stage_changes.c.id,
+                    stage_changes.c.deal_id,
+                    deals.c.name.label("deal_name"),
+                    stage_changes.c.from_stage,
+                    stage_changes.c.to_stage,
+                    stage_changes.c.happened_at,
+                )
+                .join(deals, deals.c.id == stage_changes.c.deal_id)
+                .order_by(stage_changes.c.happened_at.desc())
+                .limit(10)
+            ).mappings()
+            recent_activity.extend({
+                "id": row["id"],
+                "kind": "stage_change",
+                "deal_id": row["deal_id"],
+                "deal_name": row["deal_name"],
+                "from_stage": row["from_stage"],
+                "to_stage": row["to_stage"],
+                "happened_at": _dt(row["happened_at"]),
+            } for row in stage_rows)
+            recent_activity.sort(key=lambda activity: activity["happened_at"] or "", reverse=True)
             pending = [activity_payload(connection, r) for r in connection.execute(select(activities).where(activities.c.follow_up_date.is_not(None), activities.c.done == False).order_by(activities.c.follow_up_date)).mappings()]
-            return {"open_pipeline": sum(d["value_usd"] for d in open_deals), "open_expected_revenue": sum(float(expected_revenue(d["value_usd"], d["probability"])) for d in open_deals), "won_this_month": sum(d["value_usd"] for d in won), "deals_won": len(won), "late_deals": sum(is_late(d["stage"], date.fromisoformat(d["expected_close_date"]) if d["expected_close_date"] else None, clock.today()) for d in open_deals), "pending_follow_ups": pending, "recent_activity": [activity_payload(connection, r) for r in activity_rows]}
+            return {"open_pipeline": sum(d["value_usd"] for d in open_deals), "open_expected_revenue": sum(float(expected_revenue(d["value_usd"], d["probability"])) for d in open_deals), "won_this_month": sum(d["value_usd"] for d in won), "deals_won": len(won), "late_deals": sum(is_late(d["stage"], date.fromisoformat(d["expected_close_date"]) if d["expected_close_date"] else None, clock.today()) for d in open_deals), "pending_follow_ups": pending, "recent_activity": recent_activity[:10]}
 
     return router
