@@ -1,0 +1,18 @@
+{
+  "name": "accountable",
+  "private": true,
+  "workspaces": ["frontend"],
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "npm --workspace frontend run build",
+    "test": "npm run test:backend && npm run test:frontend && npm run test:e2e",
+    "dev:backend": "uv run --project . --directory backend uvicorn app.main:app --reload --host 127.0.0.1 --port 8000",
+    "seed": "uv run --project . --directory backend python -m app.seed",
+    "test:backend": "uv run --project . pytest",
+    "test:frontend": "npm --workspace frontend test -- --run",
+    "test:e2e": "playwright test"
+  }
+}
