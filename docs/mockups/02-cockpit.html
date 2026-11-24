@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Accountable - Cockpit Mockup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --page:#F0F4F5; --ink:#073B4C; --green:#06D6A0; --green-dark:#087F67; --gold:#FFC145; --coral:#F78C6B; --blue:#118AB2; --raspberry:#EF476F; --mist:#CDD8DB; --muted:#687D84; }
+    * { box-sizing:border-box } body { margin:0; font-family:"Instrument Sans",Arial,sans-serif; background:var(--page); color:var(--ink); }
+    .topbar { height:72px; background:#fff; display:flex; align-items:center; padding:0 34px; gap:38px; position:sticky; top:0; z-index:5; }
+    .brand { font-family:"Instrument Serif",Georgia,serif; font-size:27px; margin-right:28px; }
+    nav { display:flex; gap:4px } nav a { color:var(--ink); text-decoration:none; font-size:14px; padding:10px 12px; border-radius:9px } nav a.active { background:#E1F7F0; font-weight:700 }
+    .top-actions { margin-left:auto } button { border:0; border-radius:9px; background:var(--green); color:var(--ink); font:700 14px "Instrument Sans",sans-serif; padding:11px 14px }
+    main { max-width:1500px; margin:auto; padding:28px 34px 44px }
+    .title-row { display:flex; justify-content:space-between; align-items:end; margin-bottom:18px } h1,h2,h3,p { margin-top:0 } h1 { font-size:30px; margin-bottom:4px } .sub { color:var(--muted); font-size:13px }
+    .hero { display:grid; grid-template-columns:1.15fr .85fr; gap:14px }
+    .hero-main { background:var(--ink); color:white; border-radius:18px; min-height:188px; padding:24px 28px; position:relative; overflow:hidden }
+    .hero-main:after { content:""; position:absolute; width:160px; height:160px; border:38px solid rgba(6,214,160,.16); border-radius:50%; right:-58px; bottom:-82px }
+    .hero-main label { color:var(--mist); font-size:13px } .hero-main strong { display:block; font:600 44px "JetBrains Mono",monospace; margin:12px 0 6px } .hero-main p { color:#DDE7E9 }
+    .metric-stack { display:grid; grid-template-columns:1fr 1fr; gap:14px }
+    .metric { background:white; border-radius:16px; padding:18px } .metric label { color:var(--muted); font-size:12px } .metric b { display:block; font:600 24px "JetBrains Mono",monospace; margin-top:12px } .metric span { color:var(--green-dark); font-size:12px }
+    .dashboard-grid { display:grid; grid-template-columns:minmax(420px,1.7fr) minmax(260px,.85fr) minmax(260px,.75fr); gap:14px; margin-top:14px }
+    .panel { background:white; border-radius:16px; padding:18px } .panel h2 { font-size:16px; margin-bottom:4px } .panel-sub { color:var(--muted); font-size:12px }
+    .chart { height:224px } .chart svg { width:100%; height:100% }
+    .funnel { display:flex; flex-direction:column; gap:8px; margin-top:24px }
+    .funnel-step { height:38px; border-radius:8px; display:flex; align-items:center; justify-content:space-between; padding:0 10px; color:var(--ink); font-size:12px } .funnel-step b { font:600 11px "JetBrains Mono",monospace }
+    .activity { margin-top:12px } .activity-row { display:grid; grid-template-columns:12px 1fr; gap:8px; padding:9px 0 } .activity-row + .activity-row { border-top:1px solid #EEF2F3 } .activity-row i { width:8px;height:8px;border-radius:50%;background:var(--blue);margin-top:5px } .activity-row p { font-size:12px;margin:0 0 3px } .activity-row small { color:var(--muted);font-size:11px }
+    .followups { margin-top:12px } .task { display:flex; gap:8px; align-items:flex-start; padding:8px 0 } .task + .task { border-top:1px solid #EEF2F3 } .check { width:16px;height:16px;border:2px solid #AFC0C4;border-radius:5px;flex:none;margin-top:2px } .task p { margin:0 0 3px;font-size:12px } .task small { color:var(--muted);font-size:11px } .task.overdue small { color:#B82E52 }
+    .pipeline { margin-top:28px } .pipeline-title { display:flex; justify-content:space-between; align-items:end;margin-bottom:12px } .totals { display:flex; gap:22px } .totals span { display:block;color:var(--muted);font-size:11px } .totals b { font:600 14px "JetBrains Mono",monospace }
+    .board { display:grid;grid-template-columns:repeat(6,minmax(170px,1fr));gap:10px;overflow-x:auto }
+    .column { background:#E3EAEB;border-radius:14px;padding:9px;min-height:260px } .column:nth-child(1){border-top:4px solid var(--green)} .column:nth-child(2){border-top:4px solid var(--gold)} .column:nth-child(3){border-top:4px solid var(--coral)} .column:nth-child(4){border-top:4px solid var(--blue)} .column:nth-child(5){border-top:4px solid #087F67} .column:nth-child(6){border-top:4px solid #AFC0C4}
+    .column-head { display:flex;justify-content:space-between;padding:3px 3px 9px;font-size:12px } .column-head b {font-family:"JetBrains Mono",monospace;font-size:11px}
+    .card { background:white;border-radius:10px;padding:11px;margin-bottom:8px } .card h3 {font-size:12px;margin-bottom:4px}.card p{color:var(--muted);font-size:10px;margin:0 0 8px}.card-foot{display:flex;justify-content:space-between}.card-foot b{font:600 11px "JetBrains Mono",monospace}.card-foot span{background:#EDF4F5;border-radius:12px;padding:3px 6px;font:600 9px "JetBrains Mono",monospace}.late{color:#B82E52;font-size:9px;font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="brand">Accountable</div><nav><a class="active" href="#dashboard">Dashboard</a><a href="#organizations">Organizations</a><a href="#contacts">Contacts</a><a href="#deals">Deals</a><a href="#pipeline">Pipeline</a></nav><div class="top-actions"><button>+ New deal</button></div></div>
+  <main>
+    <div class="title-row" id="dashboard"><div><h1>Sales cockpit</h1><div class="sub">November 24, 2026 · Local sales view</div></div><div class="sub">Last 12 months</div></div>
+    <section class="hero">
+      <div class="hero-main"><label>Open expected revenue</label><strong>$342,800</strong><p>from $684,000 in open pipeline</p></div>
+      <div class="metric-stack"><div class="metric"><label>Won this month</label><b>$128.5k</b><span>+18% vs Oct</span></div><div class="metric"><label>Deals won</label><b>6</b><span>+2 this month</span></div><div class="metric"><label>Late deals</label><b>3</b><span style="color:#B82E52">Needs action</span></div><div class="metric"><label>Pending follow-ups</label><b>4</b><span>1 overdue</span></div></div>
+    </section>
+    <section class="dashboard-grid">
+      <div class="panel"><h2>Revenue won</h2><div class="panel-sub">Monthly revenue · Nov 2025 to Nov 2026</div><div class="chart"><svg viewBox="0 0 620 220" role="img" aria-label="Monthly revenue line chart"><g stroke="#EEF2F3"><line x1="35" y1="25" x2="595" y2="25"/><line x1="35" y1="75" x2="595" y2="75"/><line x1="35" y1="125" x2="595" y2="125"/><line x1="35" y1="175" x2="595" y2="175"/></g><polyline fill="none" stroke="#087F67" stroke-width="4" points="35,170 86,145 137,158 188,118 239,132 290,92 341,108 392,76 443,122 494,69 545,83 595,44"/><g fill="#06D6A0"><circle cx="35" cy="170" r="5"/><circle cx="86" cy="145" r="5"/><circle cx="137" cy="158" r="5"/><circle cx="188" cy="118" r="5"/><circle cx="239" cy="132" r="5"/><circle cx="290" cy="92" r="5"/><circle cx="341" cy="108" r="5"/><circle cx="392" cy="76" r="5"/><circle cx="443" cy="122" r="5"/><circle cx="494" cy="69" r="5"/><circle cx="545" cy="83" r="5"/><circle cx="595" cy="44" r="5"/></g></svg></div></div>
+      <div class="panel"><h2>Pipeline funnel</h2><div class="panel-sub">Value at each stage</div><div class="funnel"><div class="funnel-step" style="width:100%;background:#DFF7EF"><span>New</span><b>$184k</b></div><div class="funnel-step" style="width:87%;background:#FFF2C9"><span>Qualified</span><b>$156k</b></div><div class="funnel-step" style="width:72%;background:#FFE2DA"><span>Proposal</span><b>$218k</b></div><div class="funnel-step" style="width:54%;background:#D9EEF5"><span>Negotiation</span><b>$126k</b></div><div class="funnel-step" style="width:38%;background:#087F67;color:white"><span>Won</span><b>$128k</b></div></div></div>
+      <div class="panel"><h2>Now</h2><div class="panel-sub">Activity and next actions</div><div class="activity"><div class="activity-row"><i></i><div><p>Riverside moved to Proposal</p><small>24 minutes ago</small></div></div><div class="activity-row"><i style="background:#F78C6B"></i><div><p>Call logged with Maya Chen</p><small>2 hours ago</small></div></div></div><div class="followups"><div class="task overdue"><div class="check"></div><div><p>Send pricing revision</p><small>Overdue · Nov 22</small></div></div><div class="task"><div class="check"></div><div><p>Call about annual plan</p><small>Today · Nov 24</small></div></div><div class="task"><div class="check"></div><div><p>Share implementation notes</p><small>Nov 26</small></div></div></div></div>
+    </section>
+    <section class="pipeline" id="pipeline">
+      <div class="pipeline-title"><div><h2>Pipeline board</h2><div class="sub">12 open deals · 6 columns</div></div><div class="totals"><div><span>Open value</span><b>$684,000</b></div><div><span>Expected revenue</span><b>$342,800</b></div></div></div>
+      <div class="board">
+        <div class="column"><div class="column-head"><strong>New</strong><b>$184k</b></div><div class="card"><h3>Summit rollout</h3><p>Summit Works</p><div class="card-foot"><b>$42k</b><span>10%</span></div></div><div class="card"><h3>Partner portal</h3><p>Brighton Group</p><div class="card-foot"><b>$68k</b><span>10%</span></div></div></div>
+        <div class="column"><div class="column-head"><strong>Qualified</strong><b>$156k</b></div><div class="card"><h3>Atlas expansion</h3><p>Atlas Health</p><div class="card-foot"><b>$56k</b><span>25%</span></div></div><div class="card"><h3>Market workspace</h3><p>Northwind Labs</p><div class="card-foot"><b>$92k</b><span>25%</span></div></div></div>
+        <div class="column"><div class="column-head"><strong>Proposal</strong><b>$218k</b></div><div class="card"><h3>Riverside analytics</h3><p>Riverside Analytics</p><div class="late">Overdue · Nov 22</div><div class="card-foot"><b>$48k</b><span>50%</span></div></div><div class="card"><h3>Operations suite</h3><p>Harbor & Co.</p><div class="card-foot"><b>$120k</b><span>50%</span></div></div></div>
+        <div class="column"><div class="column-head"><strong>Negotiation</strong><b>$126k</b></div><div class="card"><h3>Cloud migration</h3><p>Meridian Energy</p><div class="card-foot"><b>$78k</b><span>75%</span></div></div></div>
+        <div class="column"><div class="column-head"><strong>Won</strong><b>$128k</b></div><div class="card"><h3>Data renewal</h3><p>Atlas Health</p><div class="card-foot"><b>$128k</b><span>100%</span></div></div></div>
+        <div class="column"><div class="column-head"><strong>Lost</strong><b>$44k</b></div><div class="card"><h3>Legacy CRM</h3><p>Pine Street</p><div class="card-foot"><b>$44k</b><span>0%</span></div></div></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

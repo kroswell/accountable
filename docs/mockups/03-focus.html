@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Accountable - Focus Mockup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --page:#F0F4F5; --ink:#073B4C; --green:#06D6A0; --green-dark:#087F67; --gold:#FFC145; --coral:#F78C6B; --blue:#118AB2; --raspberry:#EF476F; --muted:#687D84; }
+    * { box-sizing:border-box } body { margin:0;font-family:"Instrument Sans",Arial,sans-serif;background:var(--page);color:var(--ink)}
+    .shell { display:grid;grid-template-columns:188px 1fr;min-height:100vh }
+    aside { background:#073B4C;color:#CDD8DB;padding:26px 16px;position:fixed;width:188px;height:100vh }
+    .brand { color:white;font-family:"Instrument Serif",Georgia,serif;font-size:25px;margin:0 7px 32px }
+    nav a { display:flex;height:40px;align-items:center;text-decoration:none;color:#CDD8DB;padding:0 10px;border-radius:9px;margin:3px 0;font-size:13px }
+    nav a.active { background:#0B5367;color:white;font-weight:700 } nav a.active:before { content:"";width:7px;height:7px;background:var(--green);border-radius:50%;margin-right:9px }
+    nav a:not(.active):before { content:"";width:7px;height:7px;border:1px solid #91A3A8;border-radius:50%;margin-right:9px }
+    main { grid-column:2;padding:24px 32px 44px }
+    header { display:flex;justify-content:space-between;align-items:center;margin-bottom:18px } h1,h2,h3,p {margin-top:0} h1{font-size:30px;margin-bottom:3px}.sub{color:var(--muted);font-size:12px} button{border:0;border-radius:9px;background:var(--green);color:var(--ink);font:700 13px "Instrument Sans",sans-serif;padding:10px 13px}
+    .focus-grid { display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px }
+    .focus-card { background:white;border-radius:16px;padding:16px 18px;min-height:128px } .focus-card.active{background:var(--green);}.focus-card.warning{background:#FFF0F4}.focus-card label{display:block;font-size:12px;color:var(--muted);margin-bottom:10px}.focus-card.active label{color:#073B4C}.focus-card.warning label{color:#A63A58}.focus-card strong{font:600 27px "JetBrains Mono",monospace}.focus-card p{margin:7px 0 0;font-size:12px}.progress{height:5px;background:#B5ECD9;border-radius:5px;margin-top:14px}.progress i{display:block;width:68%;height:100%;background:var(--ink);border-radius:5px}
+    .mid-grid { display:grid;grid-template-columns:1.45fr .7fr;gap:12px;margin-top:12px }
+    .panel { background:white;border-radius:16px;padding:17px }.panel h2{font-size:16px;margin-bottom:3px}.panel-sub{color:var(--muted);font-size:11px}.chart{height:205px}.chart svg{width:100%;height:100%}
+    .stage-summary { display:grid;gap:8px;margin-top:14px }.stage-row{display:grid;grid-template-columns:82px 1fr 66px;align-items:center;gap:8px;font-size:11px}.stage-row i{height:9px;border-radius:6px}.stage-row b{font:600 10px "JetBrains Mono",monospace;text-align:right}
+    .bottom-grid { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px }.compact-row{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:8px 0}.compact-row + .compact-row{border-top:1px solid #EEF2F3}.compact-row .badge{width:28px;height:28px;border-radius:8px;background:#EDF4F5;display:grid;place-items:center;font-weight:700;font-size:11px}.compact-row p{font-size:11px;margin:0 0 2px}.compact-row small{color:var(--muted);font-size:10px}.compact-row b{font:600 10px "JetBrains Mono",monospace}.overdue{color:#B82E52}
+    .pipeline{margin-top:26px}.pipeline-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:11px}.totals{display:flex;gap:22px}.totals span{display:block;color:var(--muted);font-size:10px}.totals b{font:600 13px "JetBrains Mono",monospace}
+    .board{display:grid;grid-template-columns:repeat(6,minmax(170px,1fr));gap:9px;overflow-x:auto}.column{background:#E7ECEC;border-radius:14px;padding:9px;min-height:230px}.column-head{display:flex;justify-content:space-between;padding:2px 3px 9px}.column-head strong{font-size:12px}.column-head small{font:600 10px "JetBrains Mono",monospace;color:var(--muted)}
+    .card{background:white;border-radius:10px;padding:10px;margin-bottom:7px}.card h3{font-size:12px;margin-bottom:4px}.card p{font-size:10px;color:var(--muted);margin:0 0 8px}.card-foot{display:flex;justify-content:space-between}.card-foot b{font:600 11px "JetBrains Mono",monospace}.prob{border-radius:10px;background:#EDF4F5;padding:3px 5px;font:600 9px "JetBrains Mono",monospace}.late{color:#B82E52;font-size:9px;font-weight:700}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside><div class="brand">Accountable</div><nav><a class="active" href="#dashboard">Dashboard</a><a href="#organizations">Organizations</a><a href="#contacts">Contacts</a><a href="#deals">Deals</a><a href="#pipeline">Pipeline</a></nav></aside>
+  <main>
+    <header><div><h1>Today</h1><div class="sub">Tuesday, November 24 · Sales overview</div></div><button>+ Create deal</button></header>
+    <section id="dashboard">
+      <div class="focus-grid">
+        <div class="focus-card active"><label>Open pipeline</label><strong>$684k</strong><p>12 active deals</p><div class="progress"><i></i></div></div>
+        <div class="focus-card"><label>Expected revenue</label><strong>$342.8k</strong><p>Weighted close value</p></div>
+        <div class="focus-card warning"><label>Needs attention</label><strong>3 late</strong><p>1 overdue follow-up</p></div>
+      </div>
+      <div class="mid-grid">
+        <div class="panel"><h2>Revenue won</h2><div class="panel-sub">Past 12 months · $914k total</div><div class="chart"><svg viewBox="0 0 620 200" role="img" aria-label="Twelve-month won revenue chart"><g stroke="#EEF2F3"><line x1="34" y1="30" x2="592" y2="30"/><line x1="34" y1="75" x2="592" y2="75"/><line x1="34" y1="120" x2="592" y2="120"/><line x1="34" y1="165" x2="592" y2="165"/></g><path d="M34,154 C84,130 104,142 154,118 S224,132 264,92 S324,112 364,74 S424,108 464,58 S524,82 592,38 L592,165 L34,165 Z" fill="#E1F7F0"/><polyline fill="none" stroke="#087F67" stroke-width="3" points="34,154 84,130 134,142 184,118 234,132 284,92 334,112 384,74 434,108 484,58 534,82 592,38"/><g fill="#687D84" font-size="9"><text x="34" y="188">Dec</text><text x="134" y="188">Feb</text><text x="234" y="188">Apr</text><text x="334" y="188">Jun</text><text x="434" y="188">Aug</text><text x="534" y="188">Oct</text><text x="580" y="188">Nov</text></g></svg></div></div>
+        <div class="panel"><h2>Deal value by stage</h2><div class="panel-sub">Open pipeline</div><div class="stage-summary"><div class="stage-row"><span>New</span><i style="width:84%;background:#06D6A0"></i><b>$184k</b></div><div class="stage-row"><span>Qualified</span><i style="width:71%;background:#FFC145"></i><b>$156k</b></div><div class="stage-row"><span>Proposal</span><i style="width:100%;background:#F78C6B"></i><b>$218k</b></div><div class="stage-row"><span>Negotiation</span><i style="width:58%;background:#118AB2"></i><b>$126k</b></div><div class="stage-row"><span>Won</span><i style="width:59%;background:#087F67"></i><b>$128k</b></div></div></div>
+      </div>
+      <div class="bottom-grid">
+        <div class="panel"><h2>Recent activity</h2><div class="panel-sub">Newest first</div><div class="compact-row"><div class="badge" style="background:#DFF7EF">M</div><div><p>Riverside moved to Proposal</p><small>24 minutes ago</small></div><b>$48k</b></div><div class="compact-row"><div class="badge">C</div><div><p>Call with Maya Chen</p><small>2 hours ago</small></div><b>Call</b></div></div>
+        <div class="panel"><h2>Follow-ups</h2><div class="panel-sub">4 pending</div><div class="compact-row"><div class="badge" style="background:#FFEAF0">!</div><div><p>Send pricing revision</p><small class="overdue">Overdue · Nov 22</small></div><b>Today</b></div><div class="compact-row"><div class="badge">C</div><div><p>Call about annual plan</p><small>Due Nov 24</small></div><b>Today</b></div></div>
+      </div>
+    </section>
+    <section class="pipeline" id="pipeline">
+      <div class="pipeline-head"><div><h2>Pipeline</h2><div class="sub">Drag cards to move or reorder</div></div><div class="totals"><div><span>Open value</span><b>$684,000</b></div><div><span>Expected revenue</span><b>$342,800</b></div></div></div>
+      <div class="board">
+        <div class="column"><div class="column-head"><strong>New</strong><small>$184k · 5</small></div><div class="card"><h3>Summit rollout</h3><p>Summit Works</p><div class="card-foot"><b>$42k</b><span class="prob">10%</span></div></div><div class="card"><h3>Partner portal</h3><p>Brighton Group</p><div class="card-foot"><b>$68k</b><span class="prob">10%</span></div></div></div>
+        <div class="column"><div class="column-head"><strong>Qualified</strong><small>$156k · 4</small></div><div class="card"><h3>Atlas expansion</h3><p>Atlas Health</p><div class="card-foot"><b>$56k</b><span class="prob">25%</span></div></div><div class="card"><h3>Market workspace</h3><p>Northwind Labs</p><div class="card-foot"><b>$92k</b><span class="prob">25%</span></div></div></div>
+        <div class="column"><div class="column-head"><strong>Proposal</strong><small>$218k · 3</small></div><div class="card"><h3>Riverside analytics</h3><p>Riverside Analytics</p><div class="late">Overdue · Nov 22</div><div class="card-foot"><b>$48k</b><span class="prob">50%</span></div></div><div class="card"><h3>Operations suite</h3><p>Harbor & Co.</p><div class="card-foot"><b>$120k</b><span class="prob">50%</span></div></div></div>
+        <div class="column"><div class="column-head"><strong>Negotiation</strong><small>$126k · 2</small></div><div class="card"><h3>Cloud migration</h3><p>Meridian Energy</p><div class="card-foot"><b>$78k</b><span class="prob">75%</span></div></div></div>
+        <div class="column"><div class="column-head"><strong>Won</strong><small>$128k · 6</small></div><div class="card"><h3>Data renewal</h3><p>Atlas Health</p><div class="card-foot"><b>$128k</b><span class="prob">100%</span></div></div></div>
+        <div class="column"><div class="column-head"><strong>Lost</strong><small>$44k · 2</small></div><div class="card"><h3>Legacy CRM</h3><p>Pine Street</p><div class="card-foot"><b>$44k</b><span class="prob">0%</span></div></div></div>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

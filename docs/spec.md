@@ -17,6 +17,7 @@ Accountable is a private, local CRM for one salesperson. The interface prioritiz
 
 ### Visual direction
 
+- The selected design is mockup 2, `docs/mockups/02-cockpit.html`.
 - Light mode only, for laptop and desktop viewports.
 - Base surface: `#F0F4F5`; panels: white.
 - Ink: Midnight `#073B4C`.
@@ -27,11 +28,14 @@ Accountable is a private, local CRM for one salesperson. The interface prioritiz
 - Fonts load locally or from Google Fonts only as a product asset; the app remains usable if the network is unavailable by providing system fallbacks.
 - Panels use rounded corners and no outlines. Separate sections through spacing, surface color, and content hierarchy rather than edge borders.
 - Keep Sea Green and Marigold text darkened for contrast on light surfaces. Raspberry remains reserved for errors and overdue states.
+- Use no decorative gradients or bordered card chrome. Round white panels and surface contrast provide hierarchy.
+- The selected dashboard style gives one bold visual area priority: a wide Midnight open-expected-revenue panel.
 
 ### Navigation and page frame
 
-- A fixed left sidebar is the primary navigation for Dashboard, Organizations, Contacts, Deals, and Pipeline.
-- The sidebar shows the Accountable name and a compact active indicator. Page headings use Instrument Sans with a clear add/action button on the right.
+- A compact horizontal top bar is the primary navigation for Dashboard, Organizations, Contacts, Deals, and Pipeline.
+- The top bar shows the Accountable name, active navigation on a pale Sea Green surface, and a New deal action aligned at the right.
+- Page headings use Instrument Sans with a clear add/action button on the right.
 - Main content sits on the pale page background with 24-32 px gutters. Desktop density stays information-rich without reducing touch targets.
 - Show concise toast confirmation for create, update, delete, stage move, follow-up completion, and seed reset.
 - Use modal dialogs for add/edit forms and destructive confirmations. Record-detail pages use a full page layout rather than nested drawers.
@@ -79,14 +83,13 @@ The Dashboard is the default route and the first screen after startup.
 
 ### Layout
 
-Use a 12-column desktop grid:
+Use the selected mockup 2 layout:
 
-1. The top row has open pipeline value and expected revenue as paired headline metrics.
-2. The next row has won deal count and won revenue for the current and previous month.
-3. The largest visualization is a 12-month line chart of won revenue.
-4. A bar chart shows deal count or revenue by stage for the open pipeline.
-5. A compact pipeline funnel shows value remaining after each stage.
-6. Recent activity and follow-up tasks occupy the lower two columns.
+1. The page heading is "Sales cockpit" with the local date below it and "Last 12 months" context aligned to the right.
+2. The first row has a wide Midnight panel showing open expected revenue, paired with a 2×2 grid of Won this month, Deals won, Late deals, and Pending follow-ups.
+3. The lower row uses three columns: the widest for the 12-month won-revenue line chart, a medium column for the pipeline funnel, and a narrower column for recent activity and follow-up tasks.
+4. The Pipeline board appears below the Dashboard content in the same page frame.
+5. Keep the funnel stage-based from New through Won, with the value at each stage clearly labeled.
 
 No visualization is decorative. Every chart has a direct data value in a tooltip or legend. A user can navigate from a recent stage-change or deal activity to the relevant deal.
 
@@ -97,14 +100,14 @@ No visualization is decorative. Every chart has a direct data value in a tooltip
 - Won revenue: sum of deal value for Won deals closed in the selected month.
 - Won deals: count of Won deals closed in the selected month.
 - Revenue and won-deal charts cover the most recent 12 calendar months in the user's local timezone.
-- Each stage bar displays open deal count and total value.
+- Each funnel stage displays open deal count and total value consistently.
 - Late deals are open deals with an expected close date before today.
 
 ### Charts
 
 - Use Recharts or an equivalent maintained chart library.
-- The line chart shows monthly won revenue, one point per month.
-- The bar chart shows open pipeline value by stage; stage colors follow Sea Green, Marigold, Coral, and Cerulean.
+- The line chart shows monthly won revenue, one point per month, using a green line and matching data points.
+- Mockup 2 represents open pipeline by stage with a horizontal pipeline funnel rather than a separate bar chart. Its stage colors progress through Sea Green, Marigold, Coral, Cerulean, and darkened Sea Green.
 - The funnel uses a stage sequence from New through Won and is a non-interactive visual summary. It shows total value, expected revenue, or deal count consistently across the stages.
 - Empty periods show a zero value and still keep the month label visible.
 

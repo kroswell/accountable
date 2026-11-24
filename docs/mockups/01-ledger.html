@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Accountable - Ledger Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600&display=display" rel="stylesheet">
+  <style>
+    :root { --page:#F0F4F5; --panel:#fff; --ink:#073B4C; --green:#06D6A0; --green-dark:#087F67; --gold:#FFC145; --coral:#F78C6B; --blue:#118AB2; --raspberry:#EF476F; --muted:#687D84; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--page); color:var(--ink); font-family:"Instrument Sans",Arial,sans-serif; }
+    .shell { min-height:100vh; display:grid; grid-template-columns:220px 1fr; }
+    aside { background:#fff; padding:28px 18px; position:fixed; width:220px; height:100vh; }
+    .brand { font-family:"Instrument Serif",Georgia,serif; font-size:28px; margin:0 8px 34px; }
+    nav a { display:flex; align-items:center; gap:11px; height:42px; padding:0 12px; color:var(--ink); text-decoration:none; border-radius:10px; margin:3px 0; }
+    nav a.active { background:#DFF7EF; font-weight:700; }
+    nav .dot { width:8px; height:8px; border-radius:50%; background:#91A3A8; }
+    nav .active .dot { background:var(--green-dark); }
+    main { grid-column:2; padding:26px 34px 44px; }
+    header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { font-size:30px; margin-bottom:4px; }
+    .date { color:var(--muted); font-size:13px; }
+    button { border:0; border-radius:9px; background:var(--green); color:#073B4C; font:700 14px "Instrument Sans",sans-serif; padding:11px 14px; }
+    .metric-row { display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr; gap:14px; }
+    .metric { background:white; border-radius:16px; padding:18px; min-height:112px; }
+    .metric.primary { background:var(--ink); color:white; }
+    .metric label { display:block; color:var(--muted); font-size:13px; margin-bottom:10px; }
+    .metric.primary label { color:#CDD8DB; }
+    .metric strong { font:600 29px "JetBrains Mono",monospace; }
+    .metric small { color:var(--green-dark); margin-left:8px; }
+    .dashboard-grid { display:grid; grid-template-columns:minmax(0,1.8fr) minmax(270px,.75fr); gap:14px; margin-top:14px; }
+    .panel { background:var(--panel); border-radius:16px; padding:18px; }
+    .panel-head { display:flex; justify-content:space-between; align-items:flex-start; }
+    .panel-head h2 { font-size:17px; margin:2px 0 0; }
+    .panel-head span { color:var(--muted); font-size:12px; }
+    .chart { height:238px; margin-top:12px; position:relative; }
+    svg { width:100%; height:100%; }
+    .stage-bars { display:grid; grid-template-columns:repeat(4,1fr); align-items:end; height:238px; gap:16px; padding:24px 8px 20px; }
+    .bar-item { height:100%; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:8px; }
+    .bar { width:46px; border-radius:8px 8px 3px 3px; }
+    .bar-item span { font-size:12px; color:var(--muted); }
+    .bar-item b { font:600 12px "JetBrains Mono",monospace; }
+    .lower { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }
+    .list { margin-top:10px; }
+    .row { display:grid; grid-template-columns:34px 1fr auto; align-items:center; gap:9px; padding:10px 0; border-top:1px solid #EEF2F3; }
+    .row:first-child { border-top:0; }
+    .icon { width:34px; height:34px; border-radius:50%; background:#EDF4F5; display:grid; place-items:center; font-weight:700; }
+    .row p { margin:0 0 3px; font-size:13px; }
+    .row small { color:var(--muted); }
+    .amount { font:600 12px "JetBrains Mono",monospace; }
+    .pipeline { margin-top:28px; }
+    .pipeline h2 { font-size:22px; }
+    .board-head { display:flex; justify-content:space-between; align-items:end; margin-bottom:14px; }
+    .board-total { display:flex; gap:24px; }
+    .board-total span { color:var(--muted); font-size:12px; display:block; }
+    .board-total b { font:600 16px "JetBrains Mono",monospace; }
+    .board { display:grid; grid-template-columns:repeat(6,minmax(170px,1fr)); gap:10px; overflow-x:auto; }
+    .column { background:#E8EFF0; border-radius:14px; padding:10px; min-height:330px; }
+    .column-head { display:flex; justify-content:space-between; margin:2px 2px 10px; align-items:center; }
+    .column-head strong { font-size:13px; }
+    .column-head small { color:var(--muted); font:500 11px "JetBrains Mono",monospace; }
+    .card { background:white; border-radius:11px; padding:12px; margin-bottom:8px; box-shadow:0 2px 8px rgba(7,59,76,.06); }
+    .card h3 { font-size:13px; margin-bottom:5px; }
+    .card p { color:var(--muted); font-size:11px; margin:3px 0 10px; }
+    .card-foot { display:flex; justify-content:space-between; align-items:center; }
+    .card-foot b { font:600 12px "JetBrains Mono",monospace; }
+    .prob { background:#EDF4F5; border-radius:20px; padding:4px 7px; font:600 10px "JetBrains Mono",monospace; }
+    .late { color:var(--raspberry); font-size:10px; font-weight:700; }
+    .add { width:100%; background:transparent; color:var(--ink); border-radius:8px; text-align:left; padding:8px; }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="brand">Accountable</div>
+    <nav>
+      <a class="active" href="#dashboard"><span class="dot"></span>Dashboard</a>
+      <a href="#organizations"><span class="dot"></span>Organizations</a>
+      <a href="#contacts"><span class="dot"></span>Contacts</a>
+      <a href="#deals"><span class="dot"></span>Deals</a>
+      <a href="#pipeline"><span class="dot"></span>Pipeline</a>
+    </nav>
+  </aside>
+  <main>
+    <header><div><h1>Good morning</h1><div class="date">Tuesday, November 24</div></div><button>+ Add deal</button></header>
+    <section id="dashboard">
+      <div class="metric-row">
+        <div class="metric primary"><label>Open pipeline</label><strong>$684,000</strong></div>
+        <div class="metric"><label>Expected revenue</label><strong>$342,800</strong></div>
+        <div class="metric"><label>Won this month</label><strong>$128,500</strong><small>+18%</small></div>
+        <div class="metric"><label>Deals won</label><strong>6</strong><small>+2</small></div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="panel">
+          <div class="panel-head"><div><h2>Revenue won</h2><span>Last 12 months</span></div><span>$914,000 total</span></div>
+          <div class="chart">
+            <svg viewBox="0 0 680 230" role="img" aria-label="Monthly won revenue line chart">
+              <g stroke="#EEF2F3"><line x1="44" y1="20" x2="650" y2="20"/><line x1="44" y1="70" x2="650" y2="70"/><line x1="44" y1="120" x2="650" y2="120"/><line x1="44" y1="170" x2="650" y2="170"/></g>
+              <polyline fill="none" stroke="#087F67" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" points="44,178 98,150 152,164 206,122 260,142 314,96 368,112 422,82 476,126 530,72 584,88 638,48"/>
+              <g fill="#06D6A0"><circle cx="44" cy="178" r="5"/><circle cx="98" cy="150" r="5"/><circle cx="152" cy="164" r="5"/><circle cx="206" cy="122" r="5"/><circle cx="260" cy="142" r="5"/><circle cx="314" cy="96" r="5"/><circle cx="368" cy="112" r="5"/><circle cx="422" cy="82" r="5"/><circle cx="476" cy="126" r="5"/><circle cx="530" cy="72" r="5"/><circle cx="584" cy="88" r="5"/><circle cx="638" cy="48" r="5"/></g>
+              <g fill="#687D84" font-size="11"><text x="44" y="214">Dec</text><text x="152" y="214">Feb</text><text x="260" y="214">Apr</text><text x="368" y="214">Jun</text><text x="476" y="214">Aug</text><text x="584" y="214">Oct</text><text x="630" y="214">Nov</text></g>
+            </svg>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div><h2>Open by stage</h2><span>Deal value</span></div></div>
+          <div class="stage-bars">
+            <div class="bar-item"><b>$184k</b><div class="bar" style="height:72%;background:#06D6A0"></div><span>New</span></div>
+            <div class="bar-item"><b>$156k</b><div class="bar" style="height:61%;background:#FFC145"></div><span>Qualified</span></div>
+            <div class="bar-item"><b>$218k</b><div class="bar" style="height:86%;background:#F78C6B"></div><span>Proposal</span></div>
+            <div class="bar-item"><b>$126k</b><div class="bar" style="height:49%;background:#118AB2"></div><span>Negotiation</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="lower">
+        <div class="panel"><div class="panel-head"><h2>Recent activity</h2><span>View all</span></div><div class="list">
+          <div class="row"><div class="icon">N</div><div><p>Moved to Negotiation</p><small>Riverside Analytics · 24 min ago</small></div><span class="amount">$48k</span></div>
+          <div class="row"><div class="icon">C</div><div><p>Call completed with Maya Chen</p><small>Atlas Health · 2 hr ago</small></div><span class="amount">Call</span></div>
+          <div class="row"><div class="icon">M</div><div><p>Proposal sent</p><small>Northwind Labs · Yesterday</small></div><span class="amount">$92k</span></div>
+        </div></div>
+        <div class="panel"><div class="panel-head"><h2>Follow-ups</h2><span>4 tasks</span></div><div class="list">
+          <div class="row"><div class="icon" style="background:#FFEAF0;color:#B82E52">!</div><div><p>Send pricing revision</p><small>Riverside Analytics · Overdue</small></div><span class="amount" style="color:#B82E52">Nov 22</span></div>
+          <div class="row"><div class="icon">C</div><div><p>Call about annual plan</p><small>Atlas Health · Today</small></div><span class="amount">Nov 24</span></div>
+          <div class="row"><div class="icon">E</div><div><p>Share implementation notes</p><small>Northwind Labs · In 2 days</small></div><span class="amount">Nov 26</span></div>
+        </div></div>
+      </div>
+    </section>
+    <section class="pipeline" id="pipeline">
+      <div class="board-head"><div><h2>Pipeline</h2><div class="date">Drag cards to update stage and position</div></div><div class="board-total"><div><span>Open value</span><b>$684,000</b></div><div><span>Expected revenue</span><b>$342,800</b></div></div></div>
+      <div class="board">
+        <div class="column"><div class="column-head"><strong>New</strong><small>$184k · 5</small></div><div class="card"><h3>Summit rollout</h3><p>Summit Works</p><div class="card-foot"><b>$42,000</b><span class="prob">10%</span></div></div><div class="card"><h3>Partner portal</h3><p>Brighton Group</p><div class="card-foot"><b>$68,000</b><span class="prob">10%</span></div></div><button class="add">+ Add deal</button></div>
+        <div class="column"><div class="column-head"><strong>Qualified</strong><small>$156k · 4</small></div><div class="card"><h3>Atlas expansion</h3><p>Atlas Health</p><div class="card-foot"><b>$56,000</b><span class="prob">25%</span></div></div><div class="card"><h3>Market workspace</h3><p>Northwind Labs</p><div class="card-foot"><b>$92,000</b><span class="prob">25%</span></div></div><button class="add">+ Add deal</button></div>
+        <div class="column"><div class="column-head"><strong>Proposal</strong><small>$218k · 3</small></div><div class="card"><h3>Riverside analytics</h3><p>Riverside Analytics</p><div class="late">Overdue · Nov 22</div><div class="card-foot"><b>$48,000</b><span class="prob">50%</span></div></div><div class="card"><h3>Operations suite</h3><p>Harbor & Co.</p><div class="card-foot"><b>$120,000</b><span class="prob">50%</span></div></div><button class="add">+ Add deal</button></div>
+        <div class="column"><div class="column-head"><strong>Negotiation</strong><small>$126k · 2</small></div><div class="card"><h3>Cloud migration</h3><p>Meridian Energy</p><div class="card-foot"><b>$78,000</b><span class="prob">75%</span></div></div><button class="add">+ Add deal</button></div>
+        <div class="column"><div class="column-head"><strong>Won</strong><small>$128k · 6</small></div><div class="card"><h3>Data renewal</h3><p>Atlas Health</p><div class="card-foot"><b>$128,500</b><span class="prob">100%</span></div></div><button class="add">+ Add deal</button></div>
+        <div class="column"><div class="column-head"><strong>Lost</strong><small>$44k · 2</small></div><div class="card"><h3>Legacy CRM</h3><p>Pine Street</p><div class="card-foot"><b>$44,000</b><span class="prob">0%</span></div></div><button class="add">+ Add deal</button></div>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

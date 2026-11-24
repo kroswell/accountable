@@ -1,1 +1,1 @@
-The full-MVP intent and technical specification are finalized. Implementation has not started.
+The full-MVP intent and technical specification are finalized. Mockup 2 (`docs/mockups/02-cockpit.html`) is the selected dashboard and pipeline direction. Implementation has not started.
